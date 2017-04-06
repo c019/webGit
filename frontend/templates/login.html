@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <title>c019 - Login</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+
+        <form action="http://0.0.0.0:3000/login" method="post">
+            <p>
+                <input type="text" name="Username" placeholder="Usuario" />
+            </p>
+            <p>
+                <input type="password" name="Password"  placeholder="Senha" />
+            </p>
+            <p>
+                <input type="submit" value="Login" />
+            </p>
+        </form>
+        {{.Error}}
+    </body>
+</html>

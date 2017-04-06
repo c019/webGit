@@ -8,12 +8,15 @@ import (
 
 	"fmt"
 
+	"os/exec"
+
 	"gopkg.in/kataras/iris.v6"
 	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+	"gopkg.in/kataras/iris.v6/adaptors/view"
 )
 
 const (
-	address = "0.0.0.0:8080"
+	address = "0.0.0.0:3000"
 )
 
 type accounts struct {
@@ -34,20 +37,29 @@ func main() {
 func adapt(app *iris.Framework) {
 	app.Adapt(iris.DevLogger())
 	app.Adapt(httprouter.New())
+	app.Adapt(view.HTML("./frontend/templates", ".html"))
 }
 
 func routes(app *iris.Framework) {
 
 	routeErro(app)
 
-	app.Post("/git", func(ctx *iris.Context) {
+	app.Get("/", func(ctx *iris.Context) {
+		ctx.Render("login.html", nil)
+	})
+
+	app.Post("/login", func(ctx *iris.Context) {
 		account := accounts{}
 		err := ctx.ReadForm(&account)
 		if err != nil {
 			ctx.Log(iris.DevMode, "Error when reading form: "+err.Error())
 			return
 		}
-		auth(ctx, account.Username, account.Password)
+		if account.Username != "" && account.Password != "" {
+			auth(ctx, account.Username, account.Password)
+			return
+		}
+		ctx.Render("login.html", struct{ Error string }{Error: "Campos Invalidos"})
 	})
 
 }
@@ -59,23 +71,27 @@ func routeErro(app *iris.Framework) {
 }
 
 func listen(app *iris.Framework) {
+	_, err := exec.Command("google-chrome", address).Output()
+	if err != nil {
+		app.Log(iris.DevMode, "Error "+err.Error())
+		return
+	}
 	app.Log(iris.DevMode, "")
 	app.Listen(address)
 }
 
-func auth(c *iris.Context, username, password string) {
+func auth(ctx *iris.Context, username, password string) {
 	tp := github.BasicAuthTransport{
 		Username: strings.TrimSpace(username),
 		Password: strings.TrimSpace(password),
 	}
 
 	client := github.NewClient(tp.Client())
-	ctx := context.Background()
-	user, _, err := client.Users.Get(ctx, "")
+	user, _, err := client.Users.Get(context.Background(), "")
 
 	if err != nil {
-		c.Text(200, fmt.Sprintf("\nerror: %v\n", err))
+		ctx.Render("login.html", struct{ Error string }{Error: "Login Incorreto"})
 		return
 	}
-	c.Writef("Git: %v\n", fmt.Sprintf("%v", github.Stringify(user)))
+	ctx.Writef("Git: %v\n", fmt.Sprintf("%v", github.Stringify(user)))
 }
