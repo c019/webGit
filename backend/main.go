@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	address = "0.0.0.0:3000"
+	address = "192.168.111.44:3000"
 )
 
 type accounts struct {
@@ -37,7 +37,7 @@ func main() {
 func adapt(app *iris.Framework) {
 	app.Adapt(iris.DevLogger())
 	app.Adapt(httprouter.New())
-	app.Adapt(view.HTML("./frontend/templates", ".html"))
+	app.Adapt(view.HTML("/home/c019/Develop/GOPATH/src/webGit/frontend/templates", ".html"))
 }
 
 func routes(app *iris.Framework) {
@@ -46,6 +46,7 @@ func routes(app *iris.Framework) {
 
 	app.Get("/", func(ctx *iris.Context) {
 		ctx.Render("login.html", nil)
+		// ctx.Redirect("/login", 200)
 	})
 
 	app.Post("/login", func(ctx *iris.Context) {
@@ -59,6 +60,7 @@ func routes(app *iris.Framework) {
 			auth(ctx, account.Username, account.Password)
 			return
 		}
+
 		ctx.Render("login.html", struct{ Error string }{Error: "Campos Invalidos"})
 	})
 
