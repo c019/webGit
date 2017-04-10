@@ -20,8 +20,9 @@ const (
 )
 
 type accounts struct {
-	Username string
-	Password string
+	Username   string
+	Password   string
+	RememberMe string
 }
 
 func main() {
@@ -45,8 +46,11 @@ func routes(app *iris.Framework) {
 	routeErro(app)
 
 	app.Get("/", func(ctx *iris.Context) {
+		ctx.Redirect("/login")
+	})
+
+	app.Get("/login", func(ctx *iris.Context) {
 		ctx.Render("login.html", nil)
-		// ctx.Redirect("/login", 200)
 	})
 
 	app.Post("/login", func(ctx *iris.Context) {
@@ -61,7 +65,10 @@ func routes(app *iris.Framework) {
 			return
 		}
 
-		ctx.Render("login.html", struct{ Error string }{Error: "Campos Invalidos"})
+		ctx.Render("login.html", struct {
+			LoginIncorreto bool
+			MessageErro    string
+		}{LoginIncorreto: true, MessageErro: "Campos Invalidos"})
 	})
 
 }
@@ -92,7 +99,10 @@ func auth(ctx *iris.Context, username, password string) {
 	user, _, err := client.Users.Get(context.Background(), "")
 
 	if err != nil {
-		ctx.Render("login.html", struct{ Error string }{Error: "Login Incorreto"})
+		ctx.Render("login.html", struct {
+			LoginIncorreto bool
+			MessageErro    string
+		}{LoginIncorreto: true, MessageErro: "E-mail ou Senha informada estão incorretos."})
 		return
 	}
 	ctx.Writef("Git: %v\n", fmt.Sprintf("%v", github.Stringify(user)))
