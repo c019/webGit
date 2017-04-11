@@ -76,6 +76,7 @@ func routes() {
 func routeStatic() {
 	app.StaticWeb("/styles", "/home/c019/Develop/GOPATH/src/webGit/frontend/styles")
 	app.StaticWeb("/scripts", "/home/c019/Develop/GOPATH/src/webGit/frontend/scripts")
+	app.StaticWeb("/image", "/home/c019/Develop/GOPATH/src/webGit/frontend/image")
 }
 
 func routeErro() {

@@ -20,8 +20,10 @@
 </head>
 <body class="flex-xs flex-xs-between">
 
-	<div id="blog-posts" class="col-lg-6 flex-md flex-md-end flex-col hidden-md-down p-0 bg-primary">
-        <div class="bg-image-login bg-primary"></div>
+	<div class="col-lg-6 flex-md flex-md-end flex-col hidden-md-down p-0">
+		<div style="text-align: center">
+			<img src=""/>
+		</div>
     </div>
 
     <div class="col-xs-12 col-lg-6 flex-lg flex-lg-middle flex-lg-center mb-0 p-4 pos-relative overflow-hidden" style="min-height: 100vh;">
@@ -40,14 +42,13 @@
 					<div class="alert alert-warning">
 						<div class="validation-summary-errors">
 							<ul class="list-group">
-							<li class="list-group list-inline">{{.MessageErro}}</li>
+								<li class="list-group list-inline">{{.MessageErro}}</li>
 							</ul>
 						</div>
 					</div>
 				{{end}}
 				<div class="row">
         			<div class="col-xs-12">
-            
 						<div id="divEmail" class="form-group " data-passwordify="Username">
 							<label class="w-100 " for="Username">
 								E-Mail ou Usuário
@@ -58,14 +59,13 @@
 							</span>
             			</div>
 					</div>
-					<div class="col-xs-12 pb-1">
-						<div id="divPassword" class="form-group " data-passwordify="Password"  >
+					<div class="col-xs-12">
+						<div id="divPassword" class="form-group" data-passwordify="Password"  >
 							<label class="w-100" for="Password">
 								Senha
 							</label>
 							<div class="input-group">
 								<input class="form-control form-control" data-trigger="focus" data-val="true" data-val-required="Campo Inválido" id="Password" maxlength="200" name="Password" tabindex="0" type="password" value="" />
-								<!--<input id='txtPassword' type="text" class="appendedInput form-control" style="display: none;" />-->
 								<span id="checkboxPassword" class="input-group-addon cursor-pointer" rel="tooltip" data-original-title="Espiar senha" data-placement="top">
 									<i id="checkboxPasswordIcon" class="icon icon-hide"></i>
 								</span>
@@ -77,25 +77,24 @@
 					</div>
 				</div>
 				<!--Begin RememberMe-->
-					<!--<div class="col-xs-12 col-md-6 pb-1">
-						<div id="divRememberMe" class="form-check ">
-							<input class="form-check-input custom-control-input" data-val="true" data-val-required="Campo &#39;Manter-me conectado&#39; não foi informado. " id="cbRememberMe" name="RememberMe" type="checkbox" value="true" /><input name="RememberMe" type="hidden" value="false" />
-								<label class="form-check-label w-100" for="cbRememberMe">
-									Manter-me conectado
-								</label>
-							<span class="form-control-feedback">
-								<span class="field-validation-valid" data-valmsg-for="RememberMe" data-valmsg-replace="true"></span>
-							</span>
-						</div>
-					</div>-->
-				<!--Finish RememberMe-->
-					<div class="col-xs-12">
-						<input type="submit" value="Entrar " class="btn btn-lg btn-primary btn-block pt-1 margin-no margin-t " id="btn-login" />
+				<div class="col-xs-12 col-md-6 p-0 m-0">
+					<div id="divRememberMe" class="form-check ">
+						<input class="form-check-input custom-control-input" data-val="true" data-val-required="Campo &#39;Manter-me conectado&#39; não foi informado. " id="cbRememberMe" name="RememberMe" type="checkbox" value="true" /><input name="RememberMe" type="hidden" value="false" />
+							<label class="form-check-label w-100" for="cbRememberMe">
+								Manter-me conectado
+							</label>
+						<span class="form-control-feedback">
+							<span class="field-validation-valid" data-valmsg-for="RememberMe" data-valmsg-replace="true"></span>
+						</span>
 					</div>
-    			</div>
+				</div>
+				<!--Finish RememberMe-->
+				<div class="col-xs-12 p-0 m-0">
+					<input type="submit" value="Entrar " class="btn btn-lg btn-primary btn-block pt-1 margin-no margin-t" id="btn-login" />
+				</div>
 			</form>
-        </div>
-    </div>
+		</div>
+	</div>
     
     <!-- jQuery, Tether and Bootstrap JS -->
     <script src="/scripts/jquery.min.js"></script>
@@ -103,7 +102,7 @@
     <script src="/scripts/bootstrap.min.js"></script>
     <script src="/scripts/theme.min.js"></script>
 
-    <script src="/scripts/intlTelInput.js"></script>-->
+    <script src="/scripts/intlTelInput.js"></script>
     <script src="/scripts/bundle.js"></script>
 
     <script src="/scripts/countdown.js"></script>
@@ -115,6 +114,11 @@
 				$("#checkboxPasswordIcon").removeClass("icon-hide")
 				$("#checkboxPasswordIcon").addClass("icon-view")
 				$("#Password").prop("type", "text")
+			})
+			.mouseleave(function() {
+				$("#checkboxPasswordIcon").removeClass("icon-view")
+				$("#checkboxPasswordIcon").addClass("icon-hide")
+				$("#Password").prop("type", "password")
 			})
 			.mouseup(function() {
 				$("#checkboxPasswordIcon").removeClass("icon-view")
