@@ -15,35 +15,35 @@ import (
 	"gopkg.in/kataras/iris.v6/adaptors/view"
 )
 
-const (
-	address = "192.168.111.44:3000"
-)
-
 type accounts struct {
 	Username   string
 	Password   string
 	RememberMe string
 }
 
-func main() {
-	app := iris.New()
+const (
+	address = "c019.com.br:3000"
+)
 
-	adapt(app)
+var (
+	app *iris.Framework
+)
 
-	routes(app)
-
-	listen(app)
-}
-
-func adapt(app *iris.Framework) {
+func init() {
+	app = iris.New()
 	app.Adapt(iris.DevLogger())
 	app.Adapt(httprouter.New())
-	app.Adapt(view.HTML("/home/c019/Develop/GOPATH/src/webGit/frontend/templates", ".html"))
+	app.Adapt(view.HTML("/home/c019/Develop/GOPATH/src/webGit/frontend/templates", ".html").Reload(true))
 }
 
-func routes(app *iris.Framework) {
+func main() {
+	routes()
+	listenServer()
+}
+func routes() {
 
-	routeErro(app)
+	routeStatic()
+	routeErro()
 
 	app.Get("/", func(ctx *iris.Context) {
 		ctx.Redirect("/login")
@@ -73,14 +73,19 @@ func routes(app *iris.Framework) {
 
 }
 
-func routeErro(app *iris.Framework) {
+func routeStatic() {
+	app.StaticWeb("/styles", "/home/c019/Develop/GOPATH/src/webGit/frontend/styles")
+	app.StaticWeb("/scripts", "/home/c019/Develop/GOPATH/src/webGit/frontend/scripts")
+}
+
+func routeErro() {
 	app.OnError(iris.StatusNotFound, func(ctx *iris.Context) {
 		ctx.HTML(iris.StatusNotFound, "<h1>Custom not found handler!</h1>")
 	})
 }
 
-func listen(app *iris.Framework) {
-	_, err := exec.Command("google-chrome", address).Output()
+func listenServer() {
+	_, err := exec.Command("google-chrome", "http://"+address).Output()
 	if err != nil {
 		app.Log(iris.DevMode, "Error "+err.Error())
 		return

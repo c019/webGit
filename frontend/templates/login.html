@@ -8,10 +8,10 @@
 
     <title>GitHub - Login</title>
 
-	<link href="../styles/fonts.googleapis.css" rel="stylesheet">
-    <link href="../styles/theme.min.css" rel="stylesheet">
+	<link href="/styles/fonts.googleapis.css" rel="stylesheet">
+    <link href="/styles/theme.min.css" rel="stylesheet">
 
-    <link href="../styles/main.min.css" rel="stylesheet" />
+    <link href="/styles/main.min.css" rel="stylesheet" />
 
     <meta name="msapplication-TileColor" content="#f7faff">
     <meta name="msapplication-TileImage" content="/Images/favicons/ms-icon-144x144.png">
@@ -48,13 +48,13 @@
 				<div class="row">
         			<div class="col-xs-12">
             
-						<div id="divEmail" class="form-group ">
-							<label class="w-100 " for="Email">
+						<div id="divEmail" class="form-group " data-passwordify="Username">
+							<label class="w-100 " for="Username">
 								E-Mail ou Usuário
 							</label>
-							<input autofocus="autofocus" class="form-control form-control" data-val="true" data-val-required="Campo Inválido" id="Email" maxlength="100" name="Username" placeholder="" type="text" value="" />
+							<input autofocus="autofocus" class="form-control form-control" data-val="true" data-val-required="Campo Inválido" id="Username" maxlength="100" name="Username" placeholder="" type="text" value="" />
 							<span class="form-control-feedback">
-								<span class="field-validation-valid" data-valmsg-for="E-Mail" data-valmsg-replace="true"></span>
+								<span class="field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
 							</span>
             			</div>
 					</div>
@@ -64,10 +64,10 @@
 								Senha
 							</label>
 							<div class="input-group">
-								<input class="form-control form-control" data-trigger="focus" data-val="true" data-val-required="Campo Inválido" id="Password" maxlength="200" name="Password" tabindex="0" type="password" value="" style />
-								<input id='txtPassword' type="text" class="appendedInput form-control" style="display: none;" />
+								<input class="form-control form-control" data-trigger="focus" data-val="true" data-val-required="Campo Inválido" id="Password" maxlength="200" name="Password" tabindex="0" type="password" value="" />
+								<!--<input id='txtPassword' type="text" class="appendedInput form-control" style="display: none;" />-->
 								<span id="checkboxPassword" class="input-group-addon cursor-pointer" rel="tooltip" data-original-title="Espiar senha" data-placement="top">
-									<i class="icon icon-hide"></i>
+									<i id="checkboxPasswordIcon" class="icon icon-hide"></i>
 								</span>
 							</div>
 							<span class="form-control-feedback">
@@ -75,10 +75,9 @@
 							</span>
 						</div>
 					</div>
-
-
-					</div>
-					<div class="col-xs-12 col-md-6 pb-1">
+				</div>
+				<!--Begin RememberMe-->
+					<!--<div class="col-xs-12 col-md-6 pb-1">
 						<div id="divRememberMe" class="form-check ">
 							<input class="form-check-input custom-control-input" data-val="true" data-val-required="Campo &#39;Manter-me conectado&#39; não foi informado. " id="cbRememberMe" name="RememberMe" type="checkbox" value="true" /><input name="RememberMe" type="hidden" value="false" />
 								<label class="form-check-label w-100" for="cbRememberMe">
@@ -88,7 +87,8 @@
 								<span class="field-validation-valid" data-valmsg-for="RememberMe" data-valmsg-replace="true"></span>
 							</span>
 						</div>
-					</div>
+					</div>-->
+				<!--Finish RememberMe-->
 					<div class="col-xs-12">
 						<input type="submit" value="Entrar " class="btn btn-lg btn-primary btn-block pt-1 margin-no margin-t " id="btn-login" />
 					</div>
@@ -97,21 +97,32 @@
         </div>
     </div>
     
-
     <!-- jQuery, Tether and Bootstrap JS -->
-    <script src="../scripts/jquery.min.js"></script>
-    <script src="../scripts/tether.min.js"></script>
-    <script src="../scripts/bootstrap.min.js"></script>
-    <script src="../scripts/theme.min.js"></script>
+    <script src="/scripts/jquery.min.js"></script>
+    <script src="/scripts/tether.min.js"></script>
+    <script src="/scripts/bootstrap.min.js"></script>
+    <script src="/scripts/theme.min.js"></script>
 
-    <script src="../scripts/intlTelInput.js"></script>-->
-    <script src="../scripts/bundle.js"></script>
+    <script src="/scripts/intlTelInput.js"></script>-->
+    <script src="/scripts/bundle.js"></script>
 
-    
-    <script src="../scripts/countdown.js"></script>
-    <script src="../scripts/settings.js"></script>
+    <script src="/scripts/countdown.js"></script>
+    <script src="/scripts/settings.js"></script>
 
     <script>
+		$("#checkboxPassword")
+			.mousedown(function() {
+				$("#checkboxPasswordIcon").removeClass("icon-hide")
+				$("#checkboxPasswordIcon").addClass("icon-view")
+				$("#Password").prop("type", "text")
+			})
+			.mouseup(function() {
+				$("#checkboxPasswordIcon").removeClass("icon-view")
+				$("#checkboxPasswordIcon").addClass("icon-hide")
+				$("#Password").prop("type", "password")
+			})
+		;
+
         $(function () {
             setTimeout(function () {
                 $('.js-post-content').addClass('animated fadeInRight duration-400').removeClass('hidden-xs-up');
