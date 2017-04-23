@@ -1,0 +1,47 @@
+html, body {
+ background-color: #efefef;
+}
+
+.sabores {
+    margin-top: 30px;
+    margin-bottom: 25px;
+}
+.radio-inline {
+    padding: 0;
+}
+.radio-inline label {
+    padding: 10px 20px;
+    background-color: #d9edf7;
+    border: 1px solid transparent;
+
+    transition: 0.3s all ease-in-out;
+}
+.radio-inline label.check {
+    border: 1px solid #3c763d;
+    background-color: #c2f7c3;
+}
+.formVenda input[type="number"] {
+    margin-bottom: 20px;
+}
+
+.list-produtos {
+    list-style: none;
+}
+.list-produtos li {
+    border: none;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1px;
+}
+.list-produtos li div {
+    display: flex;
+    align-items: center;
+}
+.list-produtos li form {
+    margin-bottom: 0;
+}
+
+@media (max-width: 425px){
+  #grafico table {
+    font-size: 10px;
+  }
+}
