@@ -1,12 +1,9 @@
 package main
 
 import (
-	"context"
 	"strings"
 
 	"github.com/google/go-github/github"
-
-	"fmt"
 
 	"os/exec"
 
@@ -22,11 +19,12 @@ type accounts struct {
 }
 
 const (
-	address = "c019.com.br:3000"
+	address = "c019.com.br:4000"
 )
 
 var (
-	app *iris.Framework
+	app    *iris.Framework
+	client *github.Client
 )
 
 func init() {
@@ -61,7 +59,7 @@ func routes() {
 			return
 		}
 		if account.Username != "" && account.Password != "" {
-			auth(ctx, account.Username, account.Password)
+			basicAuth(ctx, account.Username, account.Password)
 			return
 		}
 
@@ -95,14 +93,15 @@ func listenServer() {
 	app.Listen(address)
 }
 
-func auth(ctx *iris.Context, username, password string) {
+func basicAuth(ctx *iris.Context, username, password string) {
 	tp := github.BasicAuthTransport{
 		Username: strings.TrimSpace(username),
 		Password: strings.TrimSpace(password),
 	}
 
-	client := github.NewClient(tp.Client())
-	user, _, err := client.Users.Get(context.Background(), "")
+	client = github.NewClient(tp.Client())
+
+	_, _, err := client.Users.Get(ctx, "")
 
 	if err != nil {
 		ctx.Render("login.html", struct {
@@ -111,5 +110,5 @@ func auth(ctx *iris.Context, username, password string) {
 		}{LoginIncorreto: true, MessageErro: "E-mail ou Senha informada estão incorretos."})
 		return
 	}
-	ctx.Writef("Git: %v\n", fmt.Sprintf("%v", github.Stringify(user)))
+	ctx.Redirect("/admin/")
 }
