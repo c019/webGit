@@ -1,12 +1,10 @@
 package main
 
 import (
+	"os/exec"
 	"strings"
 
 	"github.com/google/go-github/github"
-
-	"os/exec"
-
 	"gopkg.in/kataras/iris.v6"
 	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
 	"gopkg.in/kataras/iris.v6/adaptors/view"
@@ -19,7 +17,7 @@ type accounts struct {
 }
 
 const (
-	address = "c019.com.br:4000"
+	address = "localhost:3000"
 )
 
 var (
@@ -31,7 +29,7 @@ func init() {
 	app = iris.New()
 	app.Adapt(iris.DevLogger())
 	app.Adapt(httprouter.New())
-	app.Adapt(view.HTML("/home/c019/Develop/GOPATH/src/webGit/frontend/templates", ".html").Reload(true))
+	app.Adapt(view.HTML("/home/c019/Develop/GoPath/src/webGit/frontend/templates", ".html").Reload(true))
 }
 
 func main() {
@@ -69,12 +67,16 @@ func routes() {
 		}{LoginIncorreto: true, MessageErro: "Campos Invalidos"})
 	})
 
+	app.Get("/admin", func(ctx *iris.Context) {
+		ctx.Render("principal.html", nil)
+	})
+
 }
 
 func routeStatic() {
-	app.StaticWeb("/styles", "/home/c019/Develop/GOPATH/src/webGit/frontend/styles")
-	app.StaticWeb("/scripts", "/home/c019/Develop/GOPATH/src/webGit/frontend/scripts")
-	app.StaticWeb("/image", "/home/c019/Develop/GOPATH/src/webGit/frontend/image")
+	app.StaticWeb("/styles", "/home/c019/Develop/GoPath/src/webGit/frontend/styles")
+	app.StaticWeb("/scripts", "/home/c019/Develop/GoPath/src/webGit/frontend/scripts")
+	app.StaticWeb("/image", "/home/c019/Develop/GoPath/src/webGit/frontend/image")
 }
 
 func routeErro() {
