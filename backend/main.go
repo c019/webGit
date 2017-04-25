@@ -16,13 +16,21 @@ type accounts struct {
 	RememberMe string
 }
 
+type logins struct {
+	CheckGit         bool
+	LoginIncorreto   bool
+	MessageInfoGit   string
+	MessageErroLogin string
+}
+
 const (
-	address = "localhost:3000"
+	address = "localhost:9001"
 )
 
 var (
 	app    *iris.Framework
 	client *github.Client
+	login  = logins{}
 )
 
 func init() {
@@ -46,7 +54,15 @@ func routes() {
 	})
 
 	app.Get("/login", func(ctx *iris.Context) {
-		ctx.Render("login.html", nil)
+		_, err := exec.Command("git", "--version").Output()
+		if err != nil {
+			login.CheckGit = true
+			login.LoginIncorreto = false
+			login.MessageInfoGit = "Git não instalado"
+			ctx.Render("login.html", login)
+		} else {
+			ctx.Render("login.html", nil)
+		}
 	})
 
 	app.Post("/login", func(ctx *iris.Context) {
@@ -61,10 +77,10 @@ func routes() {
 			return
 		}
 
-		ctx.Render("login.html", struct {
-			LoginIncorreto bool
-			MessageErro    string
-		}{LoginIncorreto: true, MessageErro: "Campos Invalidos"})
+		login.LoginIncorreto = true
+		login.MessageErroLogin = "Campos Invalidos"
+
+		ctx.Render("login.html", login)
 	})
 
 	app.Get("/admin", func(ctx *iris.Context) {
@@ -106,11 +122,12 @@ func basicAuth(ctx *iris.Context, username, password string) {
 	_, _, err := client.Users.Get(ctx, "")
 
 	if err != nil {
-		ctx.Render("login.html", struct {
-			LoginIncorreto bool
-			MessageErro    string
-		}{LoginIncorreto: true, MessageErro: "E-mail ou Senha informada estão incorretos."})
+
+		login.LoginIncorreto = true
+		login.MessageErroLogin = "E-mail ou Senha informada estão incorretos."
+
+		ctx.Render("login.html", login)
 		return
 	}
-	ctx.Redirect("/admin/")
+	ctx.Redirect("/admin")
 }
