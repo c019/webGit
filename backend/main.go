@@ -59,9 +59,9 @@ func routes() {
 			login.CheckGit = true
 			login.LoginIncorreto = false
 			login.MessageInfoGit = "Git não instalado"
-			ctx.Render("login.html", login)
+			ctx.Render("login.html", login, iris.Map{"gzip": true})
 		} else {
-			ctx.Render("login.html", nil)
+			ctx.Render("login.html", nil, iris.Map{"gzip": true})
 		}
 	})
 
@@ -80,11 +80,11 @@ func routes() {
 		login.LoginIncorreto = true
 		login.MessageErroLogin = "Campos Invalidos"
 
-		ctx.Render("login.html", login)
+		ctx.Render("login.html", login, iris.Map{"gzip": true})
 	})
 
 	app.Get("/admin", func(ctx *iris.Context) {
-		ctx.Render("principal.html", nil)
+		ctx.Render("principal.html", nil, iris.Map{"gzip": true})
 	})
 
 }
@@ -126,7 +126,7 @@ func basicAuth(ctx *iris.Context, username, password string) {
 		login.LoginIncorreto = true
 		login.MessageErroLogin = "E-mail ou Senha informada estão incorretos."
 
-		ctx.Render("login.html", login)
+		ctx.Render("login.html", login, iris.Map{"gzip": true})
 		return
 	}
 	ctx.Redirect("/admin")
