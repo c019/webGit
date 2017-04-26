@@ -11,6 +11,7 @@ import (
 )
 
 type accounts struct {
+	UserGet    *github.User
 	Username   string
 	Password   string
 	RememberMe string
@@ -28,9 +29,11 @@ const (
 )
 
 var (
-	app    *iris.Framework
-	client *github.Client
-	login  = logins{}
+	checkAuth bool
+	app       *iris.Framework
+	client    *github.Client
+	login     = logins{}
+	account   = accounts{}
 )
 
 func init() {
@@ -50,23 +53,34 @@ func routes() {
 	routeErro()
 
 	app.Get("/", func(ctx *iris.Context) {
-		ctx.Redirect("/login")
+		ctx.Redirect("/checkLogin")
+	})
+
+	app.Get("/checkLogin", func(ctx *iris.Context) {
+		if checkAuth {
+			ctx.Redirect("/admin")
+		} else {
+			ctx.Redirect("/login")
+		}
 	})
 
 	app.Get("/login", func(ctx *iris.Context) {
-		_, err := exec.Command("git", "--version").Output()
-		if err != nil {
-			login.CheckGit = true
-			login.LoginIncorreto = false
-			login.MessageInfoGit = "Git não instalado"
-			ctx.Render("login.html", login, iris.Map{"gzip": true})
+		if checkAuth {
+			ctx.Redirect("/admin")
 		} else {
-			ctx.Render("login.html", nil, iris.Map{"gzip": true})
+			_, err := exec.Command("git", "--version").Output()
+			if err != nil {
+				login.CheckGit = true
+				login.LoginIncorreto = false
+				login.MessageInfoGit = "Git não instalado"
+				ctx.Render("login.html", login, iris.Map{"gzip": true})
+			} else {
+				ctx.Render("login.html", nil, iris.Map{"gzip": true})
+			}
 		}
 	})
 
 	app.Post("/login", func(ctx *iris.Context) {
-		account := accounts{}
 		err := ctx.ReadForm(&account)
 		if err != nil {
 			ctx.Log(iris.DevMode, "Error when reading form: "+err.Error())
@@ -83,8 +97,17 @@ func routes() {
 		ctx.Render("login.html", login, iris.Map{"gzip": true})
 	})
 
+	app.Get("/logout", func(ctx *iris.Context) {
+		checkAuth = false
+		ctx.Redirect("/login")
+	})
+
 	app.Get("/admin", func(ctx *iris.Context) {
-		ctx.Render("principal.html", nil, iris.Map{"gzip": true})
+		if checkAuth {
+			ctx.Render("principal.html", struct{ User string }{User: *account.UserGet.Login}, iris.Map{"gzip": true})
+		} else {
+			ctx.Redirect("/login")
+		}
 	})
 
 }
@@ -119,7 +142,7 @@ func basicAuth(ctx *iris.Context, username, password string) {
 
 	client = github.NewClient(tp.Client())
 
-	_, _, err := client.Users.Get(ctx, "")
+	response, _, err := client.Users.Get(ctx, "")
 
 	if err != nil {
 
@@ -129,5 +152,7 @@ func basicAuth(ctx *iris.Context, username, password string) {
 		ctx.Render("login.html", login, iris.Map{"gzip": true})
 		return
 	}
+	checkAuth = true
+	account.UserGet = response
 	ctx.Redirect("/admin")
 }
