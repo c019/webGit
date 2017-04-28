@@ -27,11 +27,15 @@ func main() {
 }
 
 func listenServer() {
+	go openChrome()
+	app.Log(iris.DevMode, "")
+	app.Listen(address)
+}
+
+func openChrome() {
 	_, err := exec.Command("google-chrome", "http://"+address).Output()
 	if err != nil {
 		app.Log(iris.DevMode, "Error "+err.Error())
 		return
 	}
-	app.Log(iris.DevMode, "")
-	app.Listen(address)
 }

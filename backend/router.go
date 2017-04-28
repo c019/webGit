@@ -1,7 +1,8 @@
 package backend
 
 import (
-	controller "webGit/backend/controller"
+	privado "webGit/backend/controller/privado"
+	public "webGit/backend/controller/public"
 
 	"github.com/google/go-github/github"
 	"gopkg.in/kataras/iris.v6"
@@ -25,17 +26,17 @@ func Rotas(app *iris.Framework) {
 	routeStatic(app)
 	routeErro(app)
 
-	app.Get("/", controller.Index)
+	app.Get("/", public.Index)
 
-	app.Get("/checkLogin", controller.CheckLogin)
+	app.Get("/checkLogin", public.CheckLogin)
 
-	app.Get("/login", controller.LoginGet)
+	app.Get("/login", public.LoginGet)
 
-	app.Post("/login", controller.LoginPost)
+	app.Post("/login", public.LoginPost)
 
-	app.Get("/logout", controller.Logout)
+	app.Get("/logout", public.Logout)
 
-	app.Get("/admin")
+	app.Get("/admin", privado.AdminGet)
 
 }
 
