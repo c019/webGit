@@ -1,12 +1,19 @@
 package controller
 
 import (
+	"webGit/backend/utils"
+
 	"gopkg.in/kataras/iris.v6"
 )
 
-// account   = utils.Accounts{}
-// login     = utils.Logins{}
+var (
+	account *utils.Accounts
+)
 
 func AdminGet(ctx *iris.Context) {
-	// ctx.Render("login.html", login, iris.Map{"gzip": true})
+	// if session, _ := ctx.Session().GetBoolean("user.login"); session {
+	ctx.Render("principal.html", map[string]string{"User": "user"}, iris.Map{"gzip": true})
+	// } else {
+	// ctx.Redirect("/login")
+	// }
 }

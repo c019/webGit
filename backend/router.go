@@ -5,19 +5,31 @@ import (
 	public "webGit/backend/controller/public"
 
 	"github.com/google/go-github/github"
+	"github.com/gorilla/securecookie"
 	"gopkg.in/kataras/iris.v6"
 	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+	"gopkg.in/kataras/iris.v6/adaptors/sessions"
 	"gopkg.in/kataras/iris.v6/adaptors/view"
 )
 
 var (
 	checkAuth bool
 	client    *github.Client
+	key       = "my_sessionid"
 )
 
 func start(app *iris.Framework) {
 	app.Adapt(httprouter.New())
 	app.Adapt(view.HTML("/home/c019/Develop/GoPath/src/webGit/frontend/templates", ".html").Reload(true))
+
+	secureCookie := securecookie.New(hashKey, blockKey)
+	mySessions := sessions.New(sessions.Config{
+		Cookie: cookieName,
+		Encode: secureCookie.Encode,
+		Decode: secureCookie.Decode,
+	})
+
+	app.Adapt(mySessions)
 }
 
 func Rotas(app *iris.Framework) {

@@ -12,18 +12,19 @@ import (
 )
 
 var (
-	checkAuth bool
-	client    *github.Client
-	account   = utils.Accounts{}
-	login     = utils.Logins{}
+	client  *github.Client
+	account *utils.Accounts
+	login   = utils.Logins{}
 )
 
 func Index(ctx *iris.Context) {
-	ctx.Redirect("/checkLogin")
+	// ctx.Redirect("/checkLogin")
+	ctx.Redirect("/admin")
 }
 
 func LoginGet(ctx *iris.Context) {
-	if checkAuth {
+
+	if session, _ := ctx.Session().GetBoolean("user.login"); session {
 		ctx.Redirect("/admin")
 	} else {
 		_, err := exec.Command("git", "--version").Output()
@@ -54,7 +55,7 @@ func LoginPost(ctx *iris.Context) {
 }
 
 func CheckLogin(ctx *iris.Context) {
-	if checkAuth {
+	if session, _ := ctx.Session().GetBoolean("user.login"); session {
 		ctx.Redirect("/admin")
 	} else {
 		ctx.Redirect("/login")
@@ -62,7 +63,7 @@ func CheckLogin(ctx *iris.Context) {
 }
 
 func Logout(ctx *iris.Context) {
-	checkAuth = false
+	ctx.Session().Set("user.login", false)
 	ctx.Redirect("/login")
 }
 
@@ -84,7 +85,7 @@ func authGitHub(ctx *iris.Context, username, password string) {
 		ctx.Render("login.html", login, iris.Map{"gzip": true})
 		return
 	}
-	checkAuth = true
+	ctx.Session().Set("user.login", true)
 	account.UserGet = response
 	ctx.Redirect("/admin")
 }

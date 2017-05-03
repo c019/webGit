@@ -4,6 +4,12 @@ import (
 	"github.com/google/go-github/github"
 )
 
+const (
+	cookieName = "mycustomsessionid"
+	hashKey    = []byte("the-big-and-secret-fash-key-here")
+	blockKey   = []byte("lot-secret-of-characters-big-too")
+)
+
 type Accounts struct {
 	UserGet    *github.User
 	Username   string
