@@ -3,6 +3,7 @@ package backend
 import (
 	privado "webGit/backend/controller/privado"
 	public "webGit/backend/controller/public"
+	"webGit/backend/utils"
 
 	"github.com/google/go-github/github"
 	"github.com/gorilla/securecookie"
@@ -22,9 +23,9 @@ func start(app *iris.Framework) {
 	app.Adapt(httprouter.New())
 	app.Adapt(view.HTML("/home/c019/Develop/GoPath/src/webGit/frontend/templates", ".html").Reload(true))
 
-	secureCookie := securecookie.New(hashKey, blockKey)
+	secureCookie := securecookie.New([]byte(utils.HashKey), []byte(utils.BlockKey))
 	mySessions := sessions.New(sessions.Config{
-		Cookie: cookieName,
+		Cookie: utils.CookieName,
 		Encode: secureCookie.Encode,
 		Decode: secureCookie.Decode,
 	})

@@ -5,9 +5,9 @@ import (
 )
 
 const (
-	cookieName = "mycustomsessionid"
-	hashKey    = []byte("the-big-and-secret-fash-key-here")
-	blockKey   = []byte("lot-secret-of-characters-big-too")
+	CookieName = "mycustomsessionid"
+	HashKey    = "the-big-and-secret-fash-key-here"
+	BlockKey   = "lot-secret-of-characters-big-too"
 )
 
 type Accounts struct {
